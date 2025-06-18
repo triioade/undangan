@@ -15,7 +15,7 @@
  */
 
 // src/App.jsx
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import Layout from '@/components/Layout';
 import MainContent from '@/pages/MainContent';
@@ -43,6 +43,22 @@ import config from '@/config/config';
  */
 function App() {
   const [isInvitationOpen, setIsInvitationOpen] = useState(false);
+  const [showFooter, setShowFooter] = useState(false);
+
+  useEffect(() => {
+    function handleScroll() {
+      const scrollY = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight > 0 && scrollY / docHeight > 0.7) {
+        setShowFooter(true);
+      } else {
+        setShowFooter(false);
+      }
+    }
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <HelmetProvider>
       <Helmet>
@@ -77,8 +93,35 @@ function App() {
         {!isInvitationOpen ? (
           <LandingPage onOpenInvitation={() => setIsInvitationOpen(true)} />
         ) : (
-          <Layout>
+         <Layout>
             <MainContent />
+            {showFooter && (
+              <div
+                style={{
+                  position: 'fixed',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  background: 'white',
+                  color: '#e11d48',
+                  textAlign: 'center',
+                  padding: '1.5rem 2.5rem',
+                  fontWeight: 'bold',
+                  zIndex: 2000,
+                  boxShadow: '0 4px 24px rgba(0,0,0,0.12)',
+                  borderRadius: '1.2rem',
+                  border: '1.5px solid #fda4af',
+                  minWidth: '240px',
+                  maxWidth: '90vw',
+                  fontSize: '1.2rem',
+                  letterSpacing: '0.5px',
+                  opacity: 0.98,
+                  pointerEvents: 'none'
+                }}
+              >
+                hanya bercanda 😁
+              </div>
+            )}
           </Layout>
         )}
       </AnimatePresence>
